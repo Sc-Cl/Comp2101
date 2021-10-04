@@ -21,7 +21,7 @@ find / -type f -executable -perm -4000 -ls 2>/dev/null | sort -k 5
 echo "============="
 echo "Setuid files sorted by size"
 echo "============="
-find / -type f -executable -perm -4000 -ls 2>/dev/null | sort --human-numeric-sort -k 7 | tail -12 |awk '{ printf("%-8s %-8s %-4s\n", $6, $7, $11)}'
+find / -type f -executable -perm -4000 -ls 2>/dev/null | sort -h -k 2 | tail -12 |awk '{ printf("%-8s %-8s %-4s\n", $2, $6, $11)}'
 
 # for the task, add
 # commands to display a title
