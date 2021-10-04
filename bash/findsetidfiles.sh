@@ -27,3 +27,4 @@ find / -type f -executable -perm -4000 -exec ls -lh {} \; 2>/dev/null |sort  -k 
 # commands to display a title
 # commands to make a list of the 12 biggest files
 # sort/format whatever to display the list properly
+#
