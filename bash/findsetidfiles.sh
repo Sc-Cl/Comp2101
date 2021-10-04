@@ -14,11 +14,14 @@
 #   should have its own title, similar to how the setuid files listing has a title
 # use the find command to generate the list of files with their sizes, with an error redirect to /dev/null
 # use cut or awk to display only the output desired
-
+echo "============="
 echo "Setuid files:"
 echo "============="
-find / -type f -executable -perm -4000 -ls  2>/dev/null | sort -k 7 -h | tail -12 |  awk '{$1=$2=$3=$4=$5""; print $6$7$11}'
-echo ""
+find / -type f -executable -perm -4000 -ls 2>/dev/null | sort -k 5
+echo "============="
+echo "Setuid files sorted by size"
+echo "============="
+find / -type f -executable -perm -4000 -ls 2>/dev/null | sort --human-numeric-sort -k 7 | tail -12 |awk '{ printf("%-8s %-8s %-4s\n", $6, $7, $11)}'
 
 # for the task, add
 # commands to display a title
