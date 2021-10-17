@@ -46,6 +46,6 @@ echo ""
 #e.g. hostnamectl set-hostname $newname
 hostnamectl set-hostname $stdnm
 echo "======================================"
-echo "Hostname changed, please reboot to ensure proper functionality"
+echo "Hostname changed to $stdnm, please reboot to ensure proper functionality"
 echo "======================================"
 echo ""
