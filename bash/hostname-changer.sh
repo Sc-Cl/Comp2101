@@ -9,9 +9,11 @@
 hostname >&- 2>&-
 hn=$(hostname)
 # Tell the user what the current hostname is in a human friendly way
+echo ""
 echo "======================================"
 echo "Your current hostname is: $hn"
 echo "======================================"
+echo ""
 # Ask for the user's student number using the read command
 #fooled around with variables, if something breaks it's line 18
 read -p "please enter your student number: " stdnm
@@ -46,3 +48,4 @@ hostnamectl set-hostname $stdnm
 echo "======================================"
 echo "Hostname changed, please reboot to ensure proper functionality"
 echo "======================================"
+echo ""
