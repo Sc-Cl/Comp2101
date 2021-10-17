@@ -17,25 +17,27 @@ echo "======================================"
 read -p "please enter your student number: " stdnm
 stdnm=$stdnm
 stdnm=pc$stdnm
+echo ""
 echo "======================================"
 echo "your new hostname will be: $stdnm"
 echo "======================================"
+echo ""
 # Use that to save the desired hostname of pcNNNNNNNNNN in a variable, where NNNNNNNNN is the student number entered by the user
 #desired hostname saved as variable in above script
 
 # If that hostname is not already in the /etc/hosts file, change the old hostname in that file to the new name using sed or something similar and
 #     tell the user you did that
 #e.g. sed -i "s/$oldname/$newname/" /etc/hosts
+echo ""
 echo "======================================"
 echo "administrator credentials will be required"
 echo "======================================"
-sudo sed -i "s/$hn/$stdnm/" /etc/hosts
 echo ""
+sudo sed -i "s/$hn/$stdnm/" /etc/hosts
 echo ""
 echo "======================================"
 echo "hostname added to hosts file"
 echo "======================================"
-echo ""
 echo ""
 # If that hostname is not the current hostname, change it using the hostnamectl command and
 #     tell the user you changed the current hostname and they should reboot to make sure the new name takes full effect
