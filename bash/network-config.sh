@@ -78,13 +78,15 @@
 #Hostname
 HN="$(hostname)"
 #LanAddress
-LIP="$(ip addr show)"
+LIP="$(hostname -I)"
 #Lan Hostname
-LAN Hostname    : $(getent hosts $(ip a s $(ip a |awk '/: e/{gsub(/:/,"");print $2}')|awk '/inet /{gsub(/\/.*/,"");print $2}')| awk '{print $2}')
+lhost="$(getent hosts $LIP | cut -c 16-)"
 #External IP
 ExIP="$(curl -s icanhazip.com)"
 #External name
-External Name   : $(getent hosts $(curl -s icanhazip.com) | awk '{print $2}')
-EOF
+exname="$(getent hosts $(curl -s icanhazip.com) | cut -c 15-)"
 echo $HN
 echo $ExIP
+echo $LIP
+echo $lhost
+echo $exname
