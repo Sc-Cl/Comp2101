@@ -75,18 +75,31 @@
 #   External IP     : $myExternalIP
 #   External Name   : $myExternalName
 
-#Hostname
+#Task one(data into variables)
 HN="$(hostname)"
-#LanAddress
-LIP="$(hostname -I)"
-#Lan Hostname
-lhost="$(getent hosts $LIP | cut -c 16-)"
-#External IP
-ExIP="$(curl -s icanhazip.com)"
-#External name
-exname="$(getent hosts $(curl -s icanhazip.com) | cut -c 15-)"
-echo $HN
-echo $ExIP
-echo $LIP
-echo $lhost
-echo $exname
+LanAddr="$(hostname -I)"
+LanHN="$(getent hosts $LanAddr |  awk -F ' ' '{ print $2 }')"
+ExtIP="$(curl -s icanhazip.com)"
+Extname="$(getent hosts $(curl -s icanhazip.com) |  awk -F ' ' '{ print $2 }')"
+
+#task 2 (new variables for default router gateway and hostname)
+rtrIP=$(ip route show | grep -i 'default via'| awk '{print $3 }')
+rtrHN=$(getent hosts $rtrIP |  awk -F ' ' '{ print $2 }')
+
+#finale, outputting all the information in a visually pleasing gateway
+cat << EOF
+Main Information
+============================================
+HostName:      $HN
+Lan Address:   $LanAddr
+Lan Hostname:  $LanHN
+External IP:   $ExtIP
+External Name: $Extname
+============================================
+
+Router information
+============================================
+Router IP:     $rtrIP
+Router Name:   $rtrHN
+============================================
+EOF
