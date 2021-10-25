@@ -8,12 +8,6 @@ shift $(( $OPTIND - 1 ))
 
 echo "ENABLE_VERBOSE_MODE: ${ENABLE_VERBOSE_MODE}"
 echo "Remaining positional params: ${1}"
-
-shift $(( $OPTIND - 1 ))
-
-echo "ENABLE_DEBUG_MODE: ${ENABLE_DEBUG_MODE}"
-echo "FILE_TO_WRITE_TO: ${FILE_TO_WRITE_TO}"
-echo "Remaining positional params: ${1}"
 # this script displays some host identification information for a Linux machine
 #
 # Sample output:
