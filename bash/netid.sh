@@ -6,8 +6,8 @@ while getopts "v" flag; do
 done
 shift $(( $OPTIND - 1 ))
 
-echo "ENABLE_VERBOSE_MODE: ${ENABLE_VERBOSE_MODE}"
-echo "Remaining positional params: ${1}"
+echo "Verbose Mode: ${ENABLE_VERBOSE_MODE}"
+echo "Device Specified: ${1}"
 # this script displays some host identification information for a Linux machine
 #
 # Sample output:
@@ -80,7 +80,7 @@ EOF
 #####
 
 # define the interface being summarized
-interface="eno1"
+interface="${1}"
 [ "$verbose" = "yes" ] && echo "Reporting on interface(s): $interface"
 
 [ "$verbose" = "yes" ] && echo "Getting IPV4 address and name for interface $interface"
