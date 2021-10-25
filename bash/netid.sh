@@ -1,11 +1,14 @@
 #!/usr/bin/env bash
-echo "All positional params: ${@}"
-while getopts "df:" flag; do
+while getopts "v" flag; do
   case ${flag} in
-    d) ENABLE_DEBUG_MODE='TRUE' ;;
-    f) FILE_TO_WRITE_TO=${OPTARG} ;;
+    v) ENABLE_VERBOSE_MODE='TRUE' ;;
   esac
 done
+shift $(( $OPTIND - 1 ))
+
+echo "ENABLE_VERBOSE_MODE: ${ENABLE_VERBOSE_MODE}"
+echo "Remaining positional params: ${1}"
+
 shift $(( $OPTIND - 1 ))
 
 echo "ENABLE_DEBUG_MODE: ${ENABLE_DEBUG_MODE}"
