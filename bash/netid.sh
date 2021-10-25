@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+echo "All positional params: ${@}"
 while getopts "df:" flag; do
   case ${flag} in
     d) ENABLE_DEBUG_MODE='TRUE' ;;
@@ -9,6 +10,7 @@ shift $(( $OPTIND - 1 ))
 
 echo "ENABLE_DEBUG_MODE: ${ENABLE_DEBUG_MODE}"
 echo "FILE_TO_WRITE_TO: ${FILE_TO_WRITE_TO}"
+echo "Remaining positional params: ${1}"
 # this script displays some host identification information for a Linux machine
 #
 # Sample output:
