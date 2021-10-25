@@ -1,5 +1,14 @@
-#!/bin/bash
-#
+#!/usr/bin/env bash
+while getopts "df:" flag; do
+  case ${flag} in
+    d) ENABLE_DEBUG_MODE='TRUE' ;;
+    f) FILE_TO_WRITE_TO=${OPTARG} ;;
+  esac
+done
+shift $(( $OPTIND - 1 ))
+
+echo "ENABLE_DEBUG_MODE: ${ENABLE_DEBUG_MODE}"
+echo "FILE_TO_WRITE_TO: ${FILE_TO_WRITE_TO}"
 # this script displays some host identification information for a Linux machine
 #
 # Sample output:
