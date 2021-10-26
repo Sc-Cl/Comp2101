@@ -81,40 +81,59 @@ EOF
 
 # define the interface being summarized
 interface="${1}"
+#if statement to handle no input and strip the loopback out using grep.
 if [ -z "$interface" ];
 then
   echo "No interface selected, displaying all interfaces:"
-  ip -br a s
-  exit 1
-fi
+  interfaces=$(ip -br a s | grep -vwE "(lo)" |  awk '{print $1}')
+  for interface in ${interfaces}
+ do
+   [ "$verbose" = "yes" ] && echo "Reporting on interface(s): $interface"
 
-[ "$verbose" = "yes" ] && echo "Reporting on interface(s): $interface"
+   [ "$verbose" = "yes" ] && echo "Getting IPV4 address and name for interface $interface"
+   # Find an address and hostname for the interface being summarized
+   # we are assuming there is only one IPV4 address assigned to this interface
+   ipv4_address=$(ip a s $interface|awk -F '[/ ]+' '/inet /{print $3}')
+   ipv4_hostname=$(getent hosts $ipv4_address | awk '{print $2}')
 
-[ "$verbose" = "yes" ] && echo "Getting IPV4 address and name for interface $interface"
-# Find an address and hostname for the interface being summarized
-# we are assuming there is only one IPV4 address assigned to this interface
-ipv4_address=$(ip a s $interface|awk -F '[/ ]+' '/inet /{print $3}')
-ipv4_hostname=$(getent hosts $ipv4_address | awk '{print $2}')
+   [ "$verbose" = "yes" ] && echo "Getting IPV4 network block info and name for interface $interface"
+   # Identify the network number for this interface and its name if it has one
+   # Some organizations have enough networks that it makes sense to name them just like how we name hosts
+   # To ensure your network numbers have names, add them to your /etc/networks file, one network to a line, as   networkname networknumber
+   #   e.g. grep -q mynetworknumber /etc/networks || (echo 'mynetworkname mynetworknumber' |sudo tee -a /etc/networks)
+   network_address=$(ip route list dev $interface scope link|cut -d ' ' -f 1)
+   network_number=$(cut -d / -f 1 <<<"$network_address")
+   network_name=$(getent networks $network_number|awk '{print $1}')
 
-[ "$verbose" = "yes" ] && echo "Getting IPV4 network block info and name for interface $interface"
-# Identify the network number for this interface and its name if it has one
-# Some organizations have enough networks that it makes sense to name them just like how we name hosts
-# To ensure your network numbers have names, add them to your /etc/networks file, one network to a line, as   networkname networknumber
-#   e.g. grep -q mynetworknumber /etc/networks || (echo 'mynetworkname mynetworknumber' |sudo tee -a /etc/networks)
-network_address=$(ip route list dev $interface scope link|cut -d ' ' -f 1)
-network_number=$(cut -d / -f 1 <<<"$network_address")
-network_name=$(getent networks $network_number|awk '{print $1}')
+   cat <<EOF
 
-cat <<EOF
-
-Interface $interface:
-===============
-Address         : $ipv4_address
-Name            : $ipv4_hostname
-Network Address : $network_address
-Network Name    : $network_name
+   Interface $interface:
+   ===============
+   Address         : $ipv4_address
+   Name            : $ipv4_hostname
+   Network Address : $network_address
+   Network Name    : $network_name
 
 EOF
-#####
-# End of per-interface report
-#####
+ done
+else
+  [ "$verbose" = "yes" ] && echo "Reporting on interface(s): $interface"
+  [ "$verbose" = "yes" ] && echo "Getting IPV4 address and name for interface $interface"
+  ipv4_address=$(ip a s $interface|awk -F '[/ ]+' '/inet /{print $3}')
+  ipv4_hostname=$(getent hosts $ipv4_address | awk '{print $2}')
+  [ "$verbose" = "yes" ] && echo "Getting IPV4 network block info and name for interface $interface"
+  network_address=$(ip route list dev $interface scope link|cut -d ' ' -f 1)
+  network_number=$(cut -d / -f 1 <<<"$network_address")
+  network_name=$(getent networks $network_number|awk '{print $1}')
+
+  cat <<EOF
+
+  Interface $interface:
+  ===============
+  Address         : $ipv4_address
+  Name            : $ipv4_hostname
+  Network Address : $network_address
+  Network Name    : $network_name
+
+EOF
+fi
