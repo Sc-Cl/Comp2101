@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/usr/bin/bash
 while getopts "v" flag; do
   case ${flag} in
     v) ENABLE_VERBOSE_MODE='TRUE' ;;
@@ -80,14 +80,16 @@ EOF
 #####
 
 # define the interface being summarized
-interface="${1}"
+interfaces="${1}"
 #if statement to handle no input and strip the loopback out using grep.
-if [ -z "$interface" ];
+if [ -z "$interfaces" ];
 then
   echo "No interface selected, displaying all interfaces:"
   interfaces=$(ip -br a s | grep -vwE "(lo)" |  awk '{print $1}')
-  for interface in ${interfaces}
- do
+fi
+
+for interface in ${interfaces}
+do
    [ "$verbose" = "yes" ] && echo "Reporting on interface(s): $interface"
 
    [ "$verbose" = "yes" ] && echo "Getting IPV4 address and name for interface $interface"
@@ -96,7 +98,7 @@ then
    ipv4_address=$(ip a s $interface|awk -F '[/ ]+' '/inet /{print $3}')
    ipv4_hostname=$(getent hosts $ipv4_address | awk '{print $2}')
 
-   [ "$verbose" = "yes" ] && echo "Getting IPV4 network block info and name for interface $interface"
+[ "$verbose" = "yes" ] && echo "Getting IPV4 network block info and name for interface $interface"
    # Identify the network number for this interface and its name if it has one
    # Some organizations have enough networks that it makes sense to name them just like how we name hosts
    # To ensure your network numbers have names, add them to your /etc/networks file, one network to a line, as   networkname networknumber
@@ -115,25 +117,7 @@ then
    Network Name    : $network_name
 
 EOF
- done
-else
-  [ "$verbose" = "yes" ] && echo "Reporting on interface(s): $interface"
-  [ "$verbose" = "yes" ] && echo "Getting IPV4 address and name for interface $interface"
-  ipv4_address=$(ip a s $interface|awk -F '[/ ]+' '/inet /{print $3}')
-  ipv4_hostname=$(getent hosts $ipv4_address | awk '{print $2}')
-  [ "$verbose" = "yes" ] && echo "Getting IPV4 network block info and name for interface $interface"
-  network_address=$(ip route list dev $interface scope link|cut -d ' ' -f 1)
-  network_number=$(cut -d / -f 1 <<<"$network_address")
-  network_name=$(getent networks $network_number|awk '{print $1}')
-
-  cat <<EOF
-
-  Interface $interface:
-  ===============
-  Address         : $ipv4_address
-  Name            : $ipv4_hostname
-  Network Address : $network_address
-  Network Name    : $network_name
-
-EOF
-fi
+done
+#####
+# End of per-interface report
+#####
