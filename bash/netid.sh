@@ -81,6 +81,13 @@ EOF
 
 # define the interface being summarized
 interface="${1}"
+if [ -z "$interface" ];
+then
+  echo "No interface selected, displaying all interfaces:"
+  ip -br a s
+  exit 1
+fi
+
 [ "$verbose" = "yes" ] && echo "Reporting on interface(s): $interface"
 
 [ "$verbose" = "yes" ] && echo "Getting IPV4 address and name for interface $interface"
